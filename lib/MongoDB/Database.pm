@@ -19,7 +19,7 @@ package MongoDB::Database;
 
 # ABSTRACT: A Mongo Database
 
-use Moose;
+use Mouse;
 use MongoDB::GridFS;
 use Carp 'carp';
 

@@ -18,7 +18,7 @@ package MongoDB::Cursor;
 
 
 # ABSTRACT: A cursor/iterator for Mongo query results
-use Moose;
+use Mouse;
 use boolean;
 use Tie::IxHash;
 

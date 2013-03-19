@@ -17,34 +17,41 @@
 package MongoDB::Connection;
 
 # ABSTRACT: A connection to a Mongo server
-use Moose;
+use Mouse;
+use Mouse::Util::TypeConstraints;
 
 use MongoDB;
 use MongoDB::Cursor;
 use MongoDB::MongoClient;
 
-use Class::MOP::Class;
+use Mouse::Meta::Class;
 use Digest::MD5;
 use Tie::IxHash;
 use Carp 'carp';
-use boolean;
 
+subtype 'Client'
+    => as 'Object'
+    => where { $_->isa('MongoDB::MongoClient') };
+
+coerce 'Client'
+    => from 'ArrayRef'
+        => via { MongoDB::MongoClient->new( @$_ ) };
 
 has '_client' => (
-    isa         => 'MongoDB::MongoClient', 
+    isa         => 'Client', 
     is          => 'ro',
-    handles     => [ grep { $_ !~ /^(meta|new)$/ } 
-                     map { $_->name } Class::MOP::Class->initialize( 'MongoDB::MongoClient' )->get_all_methods 
-                   ]
+    handles     =>  [
+        grep { $_ !~ /^(meta|new|[A-Z]+)$/ } 
+        map { $_->name } Mouse::Meta::Class->initialize( 'MongoDB::MongoClient' )->get_all_methods 
+    ],
+    coerce => 1,
 );
 
 
 around 'new' => sub { 
     my ( $orig, $self, @args ) = @_;
-    return $self->$orig( _client => MongoDB::MongoClient->new( @args ) );
+    return $self->$orig( _client => \@args );
 };
-
-
 
 sub AUTOLOAD {
     my $self = shift @_;

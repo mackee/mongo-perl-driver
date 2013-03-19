@@ -45,7 +45,7 @@ Core documentation on collections: L<http://dochub.mongodb.org/core/collections>
 =cut
 
 use Tie::IxHash;
-use Moose;
+use Mouse;
 use Carp 'carp';
 use boolean;
 

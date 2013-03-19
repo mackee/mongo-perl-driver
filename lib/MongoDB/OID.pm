@@ -18,7 +18,7 @@ package MongoDB::OID;
 
 # ABSTRACT: A Mongo Object ID
 
-use Moose;
+use Mouse;
 
 =head1 NAME
 

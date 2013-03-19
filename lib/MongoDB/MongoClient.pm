@@ -17,8 +17,8 @@
 package MongoDB::MongoClient;
 
 # ABSTRACT: A connection to a Mongo server
-use Moose;
-use Moose::Util::TypeConstraints;
+use Mouse;
+use Mouse::Util::TypeConstraints;
 use MongoDB;
 use MongoDB::Cursor;
 

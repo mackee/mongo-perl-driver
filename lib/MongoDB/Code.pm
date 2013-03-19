@@ -25,7 +25,7 @@ MongoDB::Code - JavaScript code
 
 =cut
 
-use Moose;
+use Mouse;
 
 =head1 ATTRIBUTES
 
