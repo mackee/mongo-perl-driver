@@ -29,28 +29,19 @@ use Digest::MD5;
 use Tie::IxHash;
 use Carp 'carp';
 
-subtype 'Client'
-    => as 'Object'
-    => where { $_->isa('MongoDB::MongoClient') };
-
-coerce 'Client'
-    => from 'ArrayRef'
-        => via { MongoDB::MongoClient->new( @$_ ) };
-
 has '_client' => (
-    isa         => 'Client', 
+    isa         => 'MongoDB::MongoClient',
     is          => 'ro',
     handles     =>  [
         grep { $_ !~ /^(meta|new|[A-Z]+)$/ } 
         map { $_->name } Mouse::Meta::Class->initialize( 'MongoDB::MongoClient' )->get_all_methods 
     ],
-    coerce => 1,
 );
 
 
 around 'new' => sub { 
     my ( $orig, $self, @args ) = @_;
-    return $self->$orig( _client => \@args );
+    return $self->$orig( _client => MongoDB::MongoClient->new(@args) );
 };
 
 sub AUTOLOAD {
